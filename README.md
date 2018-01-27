@@ -1,11 +1,8 @@
 # Cbuf
 
-**TODO: Add description**
+A [circular buffer](https://en.wikipedia.org/wiki/Circular_buffer) based on Erlang's `array` module.
 
 ## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `cbuf` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -15,7 +12,4 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/cbuf](https://hexdocs.pm/cbuf).
-
+See the docs at [https://hexdocs.pm/cbuf](https://hexdocs.pm/cbuf) for usage information.
