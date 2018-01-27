@@ -17,7 +17,7 @@ defmodule Cbuf do
   end
 
   @doc """
-  Calculate the allocated size for the buffer. This is maximum addressable size of the buffer, not how many elements it current contains. For the number of elements in the current buffer, see `count/1`
+  Calculate the allocated size for the buffer. This is maximum addressable size of the buffer, not how many values it currently contains. For the number of values in the current buffer, see `count/1`
 
       iex> Cbuf.new(5) |> Cbuf.size()
       5
@@ -27,14 +27,14 @@ defmodule Cbuf do
   end
 
   @doc """
-  Insert an element into a circular buffer.
-  Elements are inserted such that when the buffer is full, the oldest items are overwritten first.
+  Insert a value into a circular buffer.
+  Values are inserted such that when the buffer is full, the oldest items are overwritten first.
 
       iex> buf = Cbuf.new(5)
       iex> buf |> Cbuf.insert("a") |> Cbuf.insert("b")
       #Cbuf<["a", "b"]>
   """
-  def insert(buf, element) do
+  def insert(buf, val) do
     next_start =
       cond do
         buf.start == buf.size - 1 ->
@@ -53,7 +53,7 @@ defmodule Cbuf do
 
     %{
       buf
-      | impl: :array.set(buf.current, element, buf.impl),
+      | impl: :array.set(buf.current, val, buf.impl),
         start: next_start,
         current: next_current
     }
@@ -89,7 +89,7 @@ defmodule Cbuf do
   end
 
   @doc """
-  Returns the count of the non-empty elements in the buffer.
+  Returns the count of the non-empty values in the buffer.
 
       iex> Cbuf.new(5) |> Cbuf.insert("hi") |> Cbuf.count()
       1
@@ -117,7 +117,7 @@ defmodule Cbuf do
   defimpl Collectable do
     def into(original) do
       collector_fun = fn
-        buf, {:cont, elem} -> Cbuf.insert(buf, elem)
+        buf, {:cont, val} -> Cbuf.insert(buf, val)
         buf, :done -> buf
         _buf, :halt -> :ok
       end
