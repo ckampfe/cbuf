@@ -27,8 +27,10 @@ defmodule Cbuf.MixProject do
   end
 
   defp package do
-    [maintainers: ["Clark Kampfe"],
-     licenses: ["MIT"],
-     links: %{"Github" => "https://github.com/ckampfe/cbuf"}]
+    [
+      maintainers: ["Clark Kampfe"],
+      licenses: ["MIT"],
+      links: %{"Github" => "https://github.com/ckampfe/cbuf"}
+    ]
   end
 end

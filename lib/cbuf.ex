@@ -33,15 +33,17 @@ defmodule Cbuf do
       iex> buf = Cbuf.new(5)
       iex> buf |> Cbuf.insert("a") |> Cbuf.insert("b")
       #Cbuf<["a", "b"]>
+
+      iex> buf = Cbuf.new(3)
+      iex> Enum.reduce(1..20, buf, fn(val, acc) -> Cbuf.insert(acc, val) end)
+      #Cbuf<[18, 19, 20]>
   """
   def insert(buf, val) do
     next_start =
-      cond do
-        buf.start == buf.size - 1 ->
-          0
-
-        true ->
-          buf.start + 1
+      if buf.start == buf.size - 1 do
+        0
+      else
+        buf.start + 1
       end
 
     next_current =
@@ -94,7 +96,7 @@ defmodule Cbuf do
       iex> Cbuf.new(5) |> Cbuf.insert("hi") |> Cbuf.count()
       1
 
-      iex> [1,2,3,4,5,6] |> Enum.reduce(Cbuf.new(5), fn(el, acc) -> Cbuf.insert(acc, el)end)
+      iex> [1,2,3,4,5,6] |> Enum.reduce(Cbuf.new(5), fn(el, acc) -> Cbuf.insert(acc, el) end)
       #Cbuf<[2, 3, 4, 5, 6]>
   """
   def count(buf) do
