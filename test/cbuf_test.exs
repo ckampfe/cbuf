@@ -2,21 +2,13 @@ defmodule CbufTest do
   use ExUnit.Case
   doctest Cbuf
 
-  test "new" do
-    buf = Cbuf.new()
-    assert buf == %Cbuf{}
-  end
-
   test "size" do
     buf_sized = Cbuf.new(5)
     assert Cbuf.size(buf_sized) == 5
-
-    buf = Cbuf.new()
-    assert Cbuf.size(buf) == 0
   end
 
   test "to_list" do
-    empty = Cbuf.new()
+    empty = Cbuf.new(5)
     partial = Cbuf.new(5) |> Cbuf.insert("ok")
     list = ["a", "b", "c", "d", "e"]
 
@@ -43,7 +35,7 @@ defmodule CbufTest do
 
   test "count" do
     list = ["a", "b", "c", "d", "e", "f", "g"]
-    empty = Cbuf.new()
+    empty = Cbuf.new(5)
     sized_but_empty = Cbuf.new(5)
     sized_partial = Cbuf.new(5) |> Cbuf.insert("a") |> Cbuf.insert("b")
 
@@ -60,7 +52,7 @@ defmodule CbufTest do
 
   test "member" do
     list = ["a", "b", "c", "d", "e", "f", "g"]
-    empty = Cbuf.new()
+    empty = Cbuf.new(5)
 
     filled =
       Enum.reduce(list, Cbuf.new(5), fn element, acc ->
@@ -74,7 +66,7 @@ defmodule CbufTest do
 
   test "Enumerable" do
     list = ["a", "b", "c", "d", "e", "f", "g"]
-    empty = Cbuf.new()
+    empty = Cbuf.new(5)
     partial = Cbuf.new(5) |> Cbuf.insert("ok")
 
     filled =
@@ -97,5 +89,15 @@ defmodule CbufTest do
     assert Enum.slice(empty, 0..2) == []
     assert Enum.slice(partial, 0..2) == ["ok"]
     assert Enum.slice(filled, 0..2) == ["c", "d", "e"]
+  end
+
+  test "Collectable" do
+    buf =
+      Cbuf.new(5)
+      |> Cbuf.insert(1)
+      |> Cbuf.insert(2)
+      |> Cbuf.insert(3)
+
+    assert Enum.into([1, 2, 3], Cbuf.new(5)) |> Cbuf.to_list() == Cbuf.to_list(buf)
   end
 end
