@@ -35,7 +35,7 @@ warmup: 2 s
 time: 5 s
 parallel: 1
 inputs: none specified
-Estimated total run time: 1.40 min
+Estimated total run time: 2.33 min
 
 
 Benchmarking insert large...
@@ -46,36 +46,60 @@ Benchmarking new large...
 Benchmarking new medium...
 Benchmarking new small...
 Benchmarking new xlarge...
+Benchmarking peek large...
+Benchmarking peek medium...
+Benchmarking peek small...
+Benchmarking peek xlarge...
+Benchmarking size large...
+Benchmarking size medium...
+Benchmarking size small...
+Benchmarking size xlarge...
 Benchmarking to_list large...
 Benchmarking to_list medium...
 Benchmarking to_list small...
 Benchmarking to_list xlarge...
 
 Name                     ips        average  deviation         median         99th %
-new small             8.18 M       0.122 μs   ±274.93%       0.100 μs        0.42 μs
-new medium            7.13 M       0.140 μs   ±148.68%       0.120 μs        0.41 μs
-new large             6.17 M       0.162 μs   ±144.69%       0.140 μs        0.46 μs
-new xlarge            4.48 M        0.22 μs  ±3125.43%        0.20 μs        0.80 μs
-insert small          3.50 M        0.29 μs  ±1990.99%        0.20 μs           1 μs
-insert medium         2.52 M        0.40 μs  ±1533.98%        0.30 μs        1.20 μs
-insert large          1.91 M        0.53 μs   ±888.86%        0.40 μs        1.50 μs
-insert xlarge         1.57 M        0.64 μs   ±627.99%        0.60 μs        1.70 μs
-to_list small         1.04 M        0.97 μs   ±320.93%        0.80 μs        2.40 μs
-to_list medium      0.0963 M       10.38 μs   ±365.00%           9 μs          25 μs
-to_list large      0.00865 M      115.66 μs    ±24.56%         107 μs         222 μs
-to_list xlarge     0.00071 M     1416.13 μs    ±18.80%        1334 μs     2576.46 μs
+size large           34.48 M      0.0290 μs    ±30.93%      0.0260 μs      0.0550 μs
+size xlarge          34.12 M      0.0293 μs    ±42.82%      0.0270 μs      0.0550 μs
+size small           33.84 M      0.0296 μs    ±45.22%      0.0270 μs      0.0550 μs
+size medium          33.74 M      0.0296 μs    ±47.19%      0.0270 μs      0.0550 μs
+peek small           17.00 M      0.0588 μs    ±22.32%      0.0550 μs       0.112 μs
+peek medium          16.78 M      0.0596 μs    ±24.11%      0.0550 μs       0.111 μs
+peek large           16.59 M      0.0603 μs    ±25.43%      0.0550 μs       0.112 μs
+peek xlarge          16.47 M      0.0607 μs    ±52.92%      0.0600 μs       0.150 μs
+new small             8.35 M       0.120 μs   ±245.21%       0.110 μs        0.30 μs
+new medium            7.09 M       0.141 μs   ±138.43%       0.130 μs        0.34 μs
+new large             6.17 M       0.162 μs   ±130.64%       0.150 μs        0.37 μs
+new xlarge            5.58 M       0.179 μs   ±113.06%       0.160 μs        0.38 μs
+insert small          4.35 M        0.23 μs    ±86.82%        0.21 μs        0.44 μs
+insert medium         2.63 M        0.38 μs  ±1428.77%        0.30 μs        0.80 μs
+insert large          1.97 M        0.51 μs   ±881.49%        0.40 μs        1.40 μs
+insert xlarge         1.65 M        0.61 μs   ±599.77%        0.50 μs        1.50 μs
+to_list small         1.08 M        0.93 μs   ±335.66%        0.80 μs        1.80 μs
+to_list medium       0.102 M        9.78 μs   ±368.74%           9 μs          19 μs
+to_list large      0.00890 M      112.34 μs    ±21.66%         104 μs         215 μs
+to_list xlarge     0.00074 M     1360.77 μs    ±19.33%        1269 μs     2511.29 μs
 
-Comparison:
-new small             8.18 M
-new medium            7.13 M - 1.15x slower
-new large             6.17 M - 1.32x slower
-new xlarge            4.48 M - 1.82x slower
-insert small          3.50 M - 2.34x slower
-insert medium         2.52 M - 3.25x slower
-insert large          1.91 M - 4.29x slower
-insert xlarge         1.57 M - 5.22x slower
-to_list small         1.04 M - 7.91x slower
-to_list medium      0.0963 M - 84.91x slower
-to_list large      0.00865 M - 946.01x slower
-to_list xlarge     0.00071 M - 11582.50x slower
+Comparison: 
+size large           34.48 M
+size xlarge          34.12 M - 1.01x slower
+size small           33.84 M - 1.02x slower
+size medium          33.74 M - 1.02x slower
+peek small           17.00 M - 2.03x slower
+peek medium          16.78 M - 2.06x slower
+peek large           16.59 M - 2.08x slower
+peek xlarge          16.47 M - 2.09x slower
+new small             8.35 M - 4.13x slower
+new medium            7.09 M - 4.87x slower
+new large             6.17 M - 5.59x slower
+new xlarge            5.58 M - 6.18x slower
+insert small          4.35 M - 7.92x slower
+insert medium         2.63 M - 13.11x slower
+insert large          1.97 M - 17.55x slower
+insert xlarge         1.65 M - 20.86x slower
+to_list small         1.08 M - 31.88x slower
+to_list medium       0.102 M - 337.27x slower
+to_list large      0.00890 M - 3872.89x slower
+to_list xlarge     0.00074 M - 46913.41x slower
 ```

@@ -26,4 +26,17 @@ Benchee.run(%{
   "new medium" => fn -> Cbuf.new(50) end,
   "new large" => fn -> Cbuf.new(500) end,
   "new xlarge" => fn -> Cbuf.new(5000) end,
+
+  # just to prove that these are all constant time operations
+  "peek small" => fn -> Cbuf.peek(small) end,
+  "peek medium" => fn -> Cbuf.peek(medium) end,
+  "peek large" => fn -> Cbuf.peek(large) end,
+  "peek xlarge" => fn -> Cbuf.peek(xlarge) end,
+
+  # just to prove that these are all constant time operations
+  "size small" => fn -> Cbuf.size(small) end,
+  "size medium" => fn -> Cbuf.size(medium) end,
+  "size large" => fn -> Cbuf.size(large) end,
+  "size xlarge" => fn -> Cbuf.size(xlarge) end
+
 }, print: [fast_warning: false])
