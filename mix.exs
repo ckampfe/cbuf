@@ -22,7 +22,8 @@ defmodule Cbuf.MixProject do
   defp deps do
     [
       {:benchee, "~> 0.11", only: :dev},
-      {:ex_doc, "~> 0.16", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.16", only: :dev, runtime: false},
+      {:stream_data, "~> 0.1", only: :test}
     ]
   end
 
