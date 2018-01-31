@@ -1,5 +1,5 @@
 defmodule Cbuf do
-  defstruct impl: :array.new(), size: 0, start: 0, current: 0
+  defstruct impl: :array.new(), size: 0, start: 0, current: 0, empty: true
 
   @doc """
   Create a new circular buffer of a given size.
@@ -12,7 +12,8 @@ defmodule Cbuf do
       impl: :array.new(size: size, default: nil),
       size: size,
       start: 0,
-      current: 0
+      current: 0,
+      empty: true
     }
   end
 
@@ -38,27 +39,60 @@ defmodule Cbuf do
       iex> buf = Cbuf.new(3)
       iex> Enum.reduce(1..20, buf, fn(val, acc) -> Cbuf.insert(acc, val) end)
       #Cbuf<[18, 19, 20]>
+
+      iex> buf = Cbuf.new(1)
+      iex> Enum.reduce(1..20, buf, fn(val, acc) -> Cbuf.insert(acc, val) end)
+      #Cbuf<[20]>
   """
   def insert(buf, val) do
-    next_start =
-      if buf.start == buf.size - 1 do
-        0
-      else
-        buf.start + 1
-      end
+    first = 0
+    size = buf.size
+    last = size - 1
 
-    next_current =
-      if buf.current == buf.size - 1 do
-        0
-      else
-        buf.current + 1
+    {start, current, empty} =
+      case {buf.start, buf.current, buf.empty} do
+        # special case:
+        # handle the initial case where start and current both == 0
+        {s, c, true} when s == first and c == first ->
+          {first, first, false}
+
+        # special case:
+        # handle the case where start and current both == 0
+        # but a value has been set at current and the size
+        # of the buffer == 1
+        {s, c, false} when size == 1 and s == first and c == first ->
+          {first, first, false}
+
+        # special case:
+        # handle the case where start and current both == 0
+        # but a value has been set at current AND
+        # the buffer size is larger than 1
+        {s, c, false} when s == first and c == first ->
+          {first, 1, false}
+
+        # normal advance
+        {s, c, false} when c > s and c != last ->
+          {s, c + 1, false}
+
+        # normal advance with wraparound
+        {s, c, false} when s == first and c == last ->
+          {s + 1, first, false}
+
+        # normal advance with wraparound
+        {s, c, false} when s == last and c == s - 1 ->
+          {first, c + 1, false}
+
+        # normal advance
+        {s, c, false} when c == s - 1 ->
+          {s + 1, c + 1, false}
       end
 
     %{
       buf
-      | impl: :array.set(buf.current, val, buf.impl),
-        start: next_start,
-        current: next_current
+      | impl: :array.set(current, val, buf.impl),
+        start: start,
+        current: current,
+        empty: empty
     }
   end
 
@@ -68,6 +102,10 @@ defmodule Cbuf do
       iex> buf = Enum.reduce(1..20, Cbuf.new(3), fn(val, acc) -> Cbuf.insert(acc, val) end)
       iex> Cbuf.peek(buf)
       18
+
+     iex> buf = Cbuf.new(20) |> Cbuf.insert("ok") |> Cbuf.insert("fine")
+     iex> Cbuf.peek(buf)
+     "ok"
 
      iex> Cbuf.new(3) |> Cbuf.peek()
      nil
@@ -84,29 +122,30 @@ defmodule Cbuf do
       iex> buf |> Cbuf.insert("a") |> Cbuf.insert("b") |> Cbuf.to_list()
       ["a", "b"]
 
+      iex> buf = Cbuf.new(3)
+      iex> Enum.reduce(1..20, buf, fn(val, acc) -> Cbuf.insert(acc, val) end) |> Cbuf.to_list()
+      [18, 19, 20]
+
       iex> Cbuf.new(5) |> Cbuf.to_list()
       []
   """
   def to_list(buf) do
-    do_to_list(buf, [], count(buf))
+    do_to_list(buf, [], count(buf)) |> Enum.reverse()
   end
 
   defp do_to_list(_buf, list, 0), do: list
 
   defp do_to_list(buf, list, remaining) do
-    if buf.start == 0 do
-      do_to_list(
-        %{buf | start: buf.size - 1},
-        [:array.get(buf.size - 1, buf.impl) | list],
-        remaining - 1
-      )
-    else
-      do_to_list(
-        %{buf | start: buf.start - 1},
-        [:array.get(buf.start - 1, buf.impl) | list],
-        remaining - 1
-      )
-    end
+    value = :array.get(buf.start, buf.impl)
+
+    buf =
+      if buf.start == buf.size - 1 do
+        %{buf | start: 0}
+      else
+        %{buf | start: buf.start + 1}
+      end
+
+    do_to_list(buf, [value | list], remaining - 1)
   end
 
   @doc """
@@ -144,9 +183,14 @@ defmodule Cbuf do
   defimpl Collectable do
     def into(original) do
       collector_fun = fn
-        buf, {:cont, val} -> Cbuf.insert(buf, val)
-        buf, :done -> buf
-        _buf, :halt -> :ok
+        buf, {:cont, val} ->
+          Cbuf.insert(buf, val)
+
+        buf, :done ->
+          buf
+
+        _buf, :halt ->
+          :ok
       end
 
       {original, collector_fun}

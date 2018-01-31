@@ -1,103 +1,121 @@
 defmodule CbufTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+  use ExUnitProperties
   doctest Cbuf
 
-  test "size" do
-    buf_sized = Cbuf.new(5)
-    assert Cbuf.size(buf_sized) == 5
+  describe "properties" do
+    property "data in equals data out" do
+      check all input_list <- list_of(term()),
+                size <- positive_integer() do
+        last_n = input_list |> Enum.reverse() |> Enum.take(size) |> Enum.reverse()
+        buf = Enum.into(input_list, Cbuf.new(size))
+
+        assert Cbuf.peek(buf) == List.first(last_n)
+        assert Cbuf.size(buf) == size
+        assert Cbuf.count(buf) <= size
+        assert Cbuf.to_list(buf) == last_n
+      end
+    end
   end
 
-  test "to_list" do
-    empty = Cbuf.new(5)
-    partial = Cbuf.new(5) |> Cbuf.insert("ok")
-    list = ["a", "b", "c", "d", "e"]
+  describe "tests" do
+    test "size" do
+      buf_sized = Cbuf.new(5)
+      assert Cbuf.size(buf_sized) == 5
+    end
 
-    filled =
-      Enum.reduce(list, Cbuf.new(5), fn element, acc ->
-        Cbuf.insert(acc, element)
-      end)
+    test "to_list" do
+      empty = Cbuf.new(5)
+      partial = Cbuf.new(5) |> Cbuf.insert("ok")
+      list = ["a", "b", "c", "d", "e"]
 
-    assert Cbuf.to_list(empty) == []
-    assert Cbuf.to_list(partial) == ["ok"]
-    assert Cbuf.to_list(filled) == list
-  end
+      filled =
+        Enum.reduce(list, Cbuf.new(5), fn element, acc ->
+          Cbuf.insert(acc, element)
+        end)
 
-  test "insert" do
-    list = ["a", "b", "c", "d", "e", "f", "g"]
+      assert Cbuf.to_list(empty) == []
+      assert Cbuf.to_list(partial) == ["ok"]
+      assert Cbuf.to_list(filled) == list
+    end
 
-    buf =
-      Enum.reduce(list, Cbuf.new(5), fn element, acc ->
-        Cbuf.insert(acc, element)
-      end)
+    test "insert" do
+      list = ["a", "b", "c", "d", "e", "f", "g"]
 
-    assert Cbuf.to_list(buf) == ["c", "d", "e", "f", "g"]
-  end
+      buf =
+        Enum.reduce(list, Cbuf.new(5), fn element, acc ->
+          Cbuf.insert(acc, element)
+        end)
 
-  test "count" do
-    list = ["a", "b", "c", "d", "e", "f", "g"]
-    empty = Cbuf.new(5)
-    sized_but_empty = Cbuf.new(5)
-    sized_partial = Cbuf.new(5) |> Cbuf.insert("a") |> Cbuf.insert("b")
+      assert Cbuf.to_list(buf) == ["c", "d", "e", "f", "g"]
+    end
 
-    sized_filled =
-      Enum.reduce(list, Cbuf.new(5), fn element, acc ->
-        Cbuf.insert(acc, element)
-      end)
+    test "count" do
+      list = ["a", "b", "c", "d", "e", "f", "g"]
+      empty = Cbuf.new(5)
+      sized_but_empty = Cbuf.new(5)
+      sized_partial = Cbuf.new(5) |> Cbuf.insert("a") |> Cbuf.insert("b")
 
-    assert Cbuf.count(empty) == 0
-    assert Cbuf.count(sized_but_empty) == 0
-    assert Cbuf.count(sized_partial) == 2
-    assert Cbuf.count(sized_filled) == 5
-  end
+      sized_filled =
+        Enum.reduce(list, Cbuf.new(5), fn element, acc ->
+          Cbuf.insert(acc, element)
+        end)
 
-  test "member" do
-    list = ["a", "b", "c", "d", "e", "f", "g"]
-    empty = Cbuf.new(5)
+      assert Cbuf.count(empty) == 0
+      assert Cbuf.count(sized_but_empty) == 0
+      assert Cbuf.count(sized_partial) == 2
+      assert Cbuf.count(sized_filled) == 5
+    end
 
-    filled =
-      Enum.reduce(list, Cbuf.new(5), fn element, acc ->
-        Cbuf.insert(acc, element)
-      end)
+    test "member" do
+      list = ["a", "b", "c", "d", "e", "f", "g"]
+      empty = Cbuf.new(5)
 
-    assert Cbuf.member?(empty, "something") == false
-    assert Cbuf.member?(filled, "f") == true
-    assert Cbuf.member?(filled, "a") == false
-  end
+      filled =
+        Enum.reduce(list, Cbuf.new(5), fn element, acc ->
+          Cbuf.insert(acc, element)
+        end)
 
-  test "Enumerable" do
-    list = ["a", "b", "c", "d", "e", "f", "g"]
-    empty = Cbuf.new(5)
-    partial = Cbuf.new(5) |> Cbuf.insert("ok")
+      assert Cbuf.member?(empty, "something") == false
+      assert Cbuf.member?(filled, "f") == true
+      assert Cbuf.member?(filled, "a") == false
+    end
 
-    filled =
-      Enum.reduce(list, Cbuf.new(5), fn element, acc ->
-        Cbuf.insert(acc, element)
-      end)
+    test "Enumerable" do
+      list = ["a", "b", "c", "d", "e", "f", "g"]
+      empty = Cbuf.new(5)
+      partial = Cbuf.new(5) |> Cbuf.insert("ok")
 
-    assert Enum.count(empty) == 0
-    assert Enum.count(partial) == 1
-    assert Enum.count(filled) == 5
+      filled =
+        Enum.reduce(list, Cbuf.new(5), fn element, acc ->
+          Cbuf.insert(acc, element)
+        end)
 
-    assert Enum.member?(empty, "something") == false
-    assert Enum.member?(filled, "f") == true
-    assert Enum.member?(filled, "a") == false
+      assert Enum.count(empty) == 0
+      assert Enum.count(partial) == 1
+      assert Enum.count(filled) == 5
 
-    assert Enum.reduce(empty, "", fn val, acc -> acc <> val end) == ""
-    assert Enum.reduce(partial, "", fn val, acc -> acc <> val end) == "ok"
-    assert Enum.reduce(filled, "", fn val, acc -> acc <> val end) == "cdefg"
+      assert Enum.member?(empty, "something") == false
+      assert Enum.member?(filled, "f") == true
+      assert Enum.member?(filled, "a") == false
 
-    assert Enum.slice(empty, 0..2) == []
-    assert Enum.slice(partial, 0..2) == ["ok"]
-    assert Enum.slice(filled, 0..2) == ["c", "d", "e"]
-  end
+      assert Enum.reduce(empty, "", fn val, acc -> acc <> val end) == ""
+      assert Enum.reduce(partial, "", fn val, acc -> acc <> val end) == "ok"
+      assert Enum.reduce(filled, "", fn val, acc -> acc <> val end) == "cdefg"
 
-  test "Collectable" do
-    buf =
-      Cbuf.new(5)
-      |> Cbuf.insert(1)
-      |> Cbuf.insert(2)
-      |> Cbuf.insert(3)
+      assert Enum.slice(empty, 0..2) == []
+      assert Enum.slice(partial, 0..2) == ["ok"]
+      assert Enum.slice(filled, 0..2) == ["c", "d", "e"]
+    end
 
-    assert Enum.into([1, 2, 3], Cbuf.new(5)) |> Cbuf.to_list() == Cbuf.to_list(buf)
+    test "Collectable" do
+      buf =
+        Cbuf.new(5)
+        |> Cbuf.insert(1)
+        |> Cbuf.insert(2)
+        |> Cbuf.insert(3)
+
+      assert Enum.into([1, 2, 3], Cbuf.new(5)) |> Cbuf.to_list() == Cbuf.to_list(buf)
+    end
   end
 end
