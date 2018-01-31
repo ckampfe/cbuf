@@ -4,7 +4,7 @@ defmodule Cbuf.MixProject do
   def project do
     [
       app: :cbuf,
-      version: "0.2.0",
+      version: "0.3.0",
       elixir: "~> 1.6",
       package: package(),
       description: "A circular buffer backed by Erlang's array",

@@ -1,0 +1,17 @@
+# 0.3.0
+
+- fix underlying array implementation to accept `nil` as a valid insertion value
+- optimize `count/1` to speedup by ~50%
+- benchmarks for `count/1`
+- misc. doc fixes
+- add a changelog
+
+# 0.2.0
+
+- fix `insert/2`
+- add `peek/1`
+- add property test
+
+# 0.1.0
+
+- hello, world!

@@ -7,7 +7,7 @@ A [circular buffer](https://en.wikipedia.org/wiki/Circular_buffer) based on Erla
 ```elixir
 def deps do
   [
-    {:cbuf, "~> 0.2"}
+    {:cbuf, "~> 0.3"}
   ]
 end
 ```
