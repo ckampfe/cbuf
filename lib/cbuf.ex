@@ -103,12 +103,12 @@ defmodule Cbuf do
       iex> Cbuf.peek(buf)
       18
 
-     iex> buf = Cbuf.new(20) |> Cbuf.insert("ok") |> Cbuf.insert("fine")
-     iex> Cbuf.peek(buf)
-     "ok"
+      iex> buf = Cbuf.new(20) |> Cbuf.insert("ok") |> Cbuf.insert("fine")
+      iex> Cbuf.peek(buf)
+      "ok"
 
-     iex> Cbuf.new(3) |> Cbuf.peek()
-     nil
+      iex> Cbuf.new(3) |> Cbuf.peek()
+      nil
   """
   def peek(buf) do
     :array.get(buf.start, buf.impl)
@@ -153,9 +153,6 @@ defmodule Cbuf do
 
       iex> Cbuf.new(5) |> Cbuf.insert("hi") |> Cbuf.count()
       1
-
-      iex> [1,2,3,4,5,6] |> Enum.reduce(Cbuf.new(5), fn(el, acc) -> Cbuf.insert(acc, el) end)
-      #Cbuf<[2, 3, 4, 5, 6]>
 
       iex> Cbuf.new(5) |> Cbuf.count()
       0
