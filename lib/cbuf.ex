@@ -9,7 +9,7 @@ defmodule Cbuf do
   """
   def new(size) when size > 0 do
     %__MODULE__{
-      impl: :array.new(size: size, default: nil),
+      impl: :array.new(size: size),
       size: size,
       start: 0,
       current: 0,
@@ -111,7 +111,10 @@ defmodule Cbuf do
       nil
   """
   def peek(buf) do
-    :array.get(buf.start, buf.impl)
+    case :array.get(buf.start, buf.impl) do
+      :undefined -> nil
+      val -> val
+    end
   end
 
   @doc """
@@ -158,10 +161,22 @@ defmodule Cbuf do
       0
 
       iex> Cbuf.new(5) |> Cbuf.insert(nil) |> Cbuf.count()
-      0
+      1
   """
   def count(buf) do
-    :array.sparse_foldl(fn _idx, _val, total -> total + 1 end, 0, buf.impl)
+    case {buf.start, buf.current, buf.empty} do
+      {s, c, false} when s == c + 1 ->
+        buf.size
+
+      {s, c, false} when c > s ->
+        c + 1 - s
+
+      {0, 0, true} ->
+        0
+
+      {0, 0, false} ->
+        1
+    end
   end
 
   @doc """

@@ -37,6 +37,11 @@ Benchee.run(%{
   "size small" => fn -> Cbuf.size(small) end,
   "size medium" => fn -> Cbuf.size(medium) end,
   "size large" => fn -> Cbuf.size(large) end,
-  "size xlarge" => fn -> Cbuf.size(xlarge) end
+  "size xlarge" => fn -> Cbuf.size(xlarge) end,
+
+  "count small" => fn -> Cbuf.count(small) end,
+  "count medium" => fn -> Cbuf.count(medium) end,
+  "count large" => fn -> Cbuf.count(large) end,
+  "count xlarge" => fn -> Cbuf.count(xlarge) end,
 
 }, print: [fast_warning: false])
