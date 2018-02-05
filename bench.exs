@@ -44,4 +44,13 @@ Benchee.run(%{
   "count large" => fn -> Cbuf.count(large) end,
   "count xlarge" => fn -> Cbuf.count(xlarge) end,
 
+  "delete small" => fn -> Cbuf.delete(small) end,
+  "delete medium" => fn -> Cbuf.delete(medium) end,
+  "delete large" => fn -> Cbuf.delete(large) end,
+  "delete xlarge" => fn -> Cbuf.delete(xlarge) end,
+
+  "pop small" => fn -> Cbuf.pop(small) end,
+  "pop medium" => fn -> Cbuf.pop(medium) end,
+  "pop large" => fn -> Cbuf.pop(large) end,
+  "pop xlarge" => fn -> Cbuf.pop(xlarge) end,
 }, print: [fast_warning: false])

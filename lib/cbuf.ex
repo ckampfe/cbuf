@@ -118,6 +118,81 @@ defmodule Cbuf do
   end
 
   @doc """
+  Return the oldest value in the buffer, and a new buffer with that value removed.
+
+      iex> buf = Enum.reduce(1..20, Cbuf.new(3), fn(val, acc) -> Cbuf.insert(acc, val) end)
+      iex> {val, buf} = Cbuf.pop(buf)
+      iex> {val, Cbuf.to_list(buf)} # Elixir has trouble inspecting a nested struct, see https://hexdocs.pm/ex_unit/ExUnit.DocTest.html#module-opaque-types
+      {18, [19, 20]}
+
+      iex> {val, buf} = Cbuf.new(1) |> Cbuf.insert("hi") |> Cbuf.pop()
+      iex> {val, Cbuf.to_list(buf)}
+      {"hi", []}
+  """
+  def pop(buf) do
+    val = peek(buf)
+    buf = delete(buf)
+
+    {val, buf}
+  end
+
+  @doc """
+  Return a new buffer with the oldest item in the buffer removed.
+
+      iex> buf = Enum.reduce(1..20, Cbuf.new(3), fn(val, acc) -> Cbuf.insert(acc, val) end)
+      iex> buf = Cbuf.delete(buf)
+      iex> Cbuf.peek(buf)
+      19
+
+      iex> buf = Enum.reduce(1..6, Cbuf.new(5), fn(val, acc) -> Cbuf.insert(acc, val) end)
+      iex> buf = Cbuf.delete(buf)
+      iex> Cbuf.peek(buf)
+      3
+
+      iex> buf = Enum.reduce(1..6, Cbuf.new(5), fn(val, acc) -> Cbuf.insert(acc, val) end)
+      iex> Cbuf.delete(buf) |> Cbuf.count()
+      4
+
+      iex> buf = Cbuf.new(5)
+      iex> buf = Cbuf.insert(buf, "ok")
+      iex> Cbuf.delete(buf)
+      #Cbuf<[]>
+
+      iex> buf = Cbuf.new(5)
+      iex> Cbuf.delete(buf)
+      #Cbuf<[]>
+  """
+  def delete(buf) do
+    size = buf.size
+
+    {start, current, empty} =
+      case {buf.start, buf.current, buf.empty} do
+        {0, 0, true} ->
+          {0, 0, true}
+
+        {s, c, false} when s < c ->
+          {s + 1, c, false}
+
+        {s, c, false} when s == c ->
+          {0, 0, true}
+
+        {s, c, false} when s > c and s == size - 1 ->
+          {0, c, false}
+
+        {s, c, false} when s > c ->
+          {s + 1, c, false}
+      end
+
+    %{
+      buf
+      | impl: :array.set(buf.start, :undefined, buf.impl),
+        start: start,
+        current: current,
+        empty: empty
+    }
+  end
+
+  @doc """
   Convert a circular buffer to a list. The list is ordered by age, oldest to newest.
   This operation takes linear time.
 
@@ -162,20 +237,33 @@ defmodule Cbuf do
 
       iex> Cbuf.new(5) |> Cbuf.insert(nil) |> Cbuf.count()
       1
+
+      iex> Cbuf.new(5) |> Cbuf.insert("hi") |> Cbuf.delete() |> Cbuf.count()
+      0
+
+      iex> buf = Enum.reduce(1..13, Cbuf.new(5), &Cbuf.insert(&2, &1))
+      iex> Cbuf.delete(buf) |> Cbuf.count()
+      4
+
+      iex> Cbuf.new(3) |> Cbuf.delete() |> Cbuf.delete() |> Cbuf.count()
+      0
   """
   def count(buf) do
     case {buf.start, buf.current, buf.empty} do
-      {s, c, false} when s == c + 1 ->
-        buf.size
-
       {s, c, false} when c > s ->
         c + 1 - s
 
-      {0, 0, true} ->
-        0
+      {s, c, false} when s > c ->
+        buf.size - (s - c - 1)
+
+      {s, c, false} when s == c ->
+        1
 
       {0, 0, false} ->
         1
+
+      {_, _, true} ->
+        0
     end
   end
 

@@ -3,21 +3,6 @@ defmodule CbufTest do
   use ExUnitProperties
   doctest Cbuf
 
-  describe "properties" do
-    property "data in equals data out" do
-      check all input_list <- list_of(term()),
-                size <- positive_integer() do
-        last_n = input_list |> Enum.reverse() |> Enum.take(size) |> Enum.reverse()
-        buf = Enum.into(input_list, Cbuf.new(size))
-
-        assert Cbuf.peek(buf) == List.first(last_n)
-        assert Cbuf.size(buf) == size
-        assert Cbuf.count(buf) <= size
-        assert Cbuf.to_list(buf) == last_n
-      end
-    end
-  end
-
   describe "tests" do
     test "size" do
       buf_sized = Cbuf.new(5)
