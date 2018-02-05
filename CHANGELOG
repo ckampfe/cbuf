@@ -1,3 +1,9 @@
+# 0.4.0
+
+- add delete/1
+- add pop/1
+- move property tests to separate module
+
 # 0.3.0
 
 - fix underlying array implementation to accept `nil` as a valid insertion value
