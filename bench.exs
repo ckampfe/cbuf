@@ -53,4 +53,10 @@ Benchee.run(%{
   "pop medium" => fn -> Cbuf.pop(medium) end,
   "pop large" => fn -> Cbuf.pop(large) end,
   "pop xlarge" => fn -> Cbuf.pop(xlarge) end,
+
+  "empty? small" => fn -> Cbuf.empty?(small) end,
+  "empty? medium" => fn -> Cbuf.empty?(medium) end,
+  "empty? large" => fn -> Cbuf.empty?(large) end,
+  "empty? xlarge" => fn -> Cbuf.empty?(xlarge) end,
+
 }, print: [fast_warning: false])

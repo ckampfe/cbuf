@@ -23,6 +23,18 @@ defmodule CbufPropertiesTest do
           assert Cbuf.delete(buf) |> Cbuf.count() == 0
         end
 
+        if Cbuf.count(buf) == 0 do
+          assert Cbuf.empty?(buf)
+        else
+          refute Cbuf.empty?(buf)
+        end
+
+        if Enum.count(last_n) == 0 do
+          assert Cbuf.empty?(buf)
+        else
+          refute Cbuf.empty?(buf)
+        end
+
         assert Cbuf.pop(buf) == {Cbuf.peek(buf), Cbuf.delete(buf)}
       end
     end

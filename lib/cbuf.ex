@@ -29,6 +29,26 @@ defmodule Cbuf do
   end
 
   @doc """
+  Whether or not the buffer is empty.
+  This value corresponds to when the buffer has a `count` of zero, not its `size`.
+
+      iex> buf = Cbuf.new(5)
+      iex> Cbuf.empty?(buf)
+      true
+
+      iex> buf = Cbuf.new(5) |> Cbuf.insert("hi")
+      iex> Cbuf.empty?(buf)
+      false
+
+      iex> buf = Cbuf.new(5) |> Cbuf.insert("hi") |> Cbuf.delete()
+      iex> Cbuf.empty?(buf)
+      true
+  """
+  def empty?(buf) do
+    buf.empty
+  end
+
+  @doc """
   Insert a value into a circular buffer.
   Values are inserted such that when the buffer is full, the oldest items are overwritten first.
 
