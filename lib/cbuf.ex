@@ -130,10 +130,7 @@ defmodule Cbuf do
       {"hi", []}
   """
   def pop(buf) do
-    val = peek(buf)
-    buf = delete(buf)
-
-    {val, buf}
+    {peek(buf), delete(buf)}
   end
 
   @doc """
