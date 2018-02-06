@@ -1,3 +1,8 @@
+# 0.4.1
+
+- add empty/1
+- refactor pop/1 internal
+
 # 0.4.0
 
 - add delete/1
