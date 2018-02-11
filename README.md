@@ -1,13 +1,13 @@
 # Cbuf
 
-A [circular buffer](https://en.wikipedia.org/wiki/Circular_buffer) based on Erlang's `array` module.
+A [circular buffer](https://en.wikipedia.org/wiki/Circular_buffer) with implementations built on `map` and `ets`.
 
 ## Installation
 
 ```elixir
 def deps do
   [
-    {:cbuf, "~> 0.4"}
+    {:cbuf, "~> 0.5"}
   ]
 end
 ```

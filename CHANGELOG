@@ -1,3 +1,12 @@
+# 0.5.0
+
+- major rework that defines a `Cbuf` behaviour, and provides implementations for `Map` and `ETS`
+- add lots of docs
+- add typespecs and dialyzer
+- add example `GenServer` implementation in `Cbuf.Map`
+- separate out property tests
+- update benchmarks to something a bit more realistic
+
 # 0.4.1
 
 - add empty/1
