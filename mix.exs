@@ -7,9 +7,12 @@ defmodule Cbuf.MixProject do
       version: "0.4.1",
       elixir: "~> 1.6",
       package: package(),
-      description: "A circular buffer backed by Erlang's array",
+      description: "A circular buffer backed by a map or ETS",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      dialyzer: [
+        flags: ["-Wunmatched_returns", :error_handling, :race_conditions, :underspecs]
+      ]
     ]
   end
 
@@ -23,7 +26,8 @@ defmodule Cbuf.MixProject do
     [
       {:benchee, "~> 0.11", only: :dev},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
-      {:stream_data, "~> 0.1", only: :test}
+      {:stream_data, "~> 0.1", only: :test},
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
     ]
   end
 
