@@ -1,3 +1,7 @@
+# 0.6.0
+
+- relax Elixir requirement to 1.5 instead of 1.6
+
 # 0.5.0
 
 - major rework that defines a `Cbuf` behaviour, and provides implementations for `Map` and `ETS`
