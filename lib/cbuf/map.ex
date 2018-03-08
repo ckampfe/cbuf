@@ -11,7 +11,8 @@ defmodule Cbuf.Map do
   Maps, like the other normal Elixir/Erlang datastructures, typically exist in process memory. For example,
   it is recommended to use this module behind a GenServer in order to share its usage across the system.
   Using `Cbuf.Map` in this way means that updates to the buffer will be at the mercy of the process' garbage collection.
-  For large data sets with a lot of process GC, [your application may benefit from a different approach](https://elixirforum.com/t/why-use-ets-when-not-to-use-it/4326/8). For this reason, there is also `Cbuf.ETS` that is drop-in API compatible.
+  For large data sets with a lot of process GC, [your application may benefit from a different approach](https://elixirforum.com/t/why-use-ets-when-not-to-use-it/4326/8).
+  For this reason, there is also `Cbuf.ETS` that is drop-in API compatible.
   I recommend defaulting to using `Cbuf.Map` with a GenServer and benchmarking your application.
 
   An example partially-complete `GenServer`  might look something like the following:
