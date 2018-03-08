@@ -2,6 +2,8 @@
 
 A [circular buffer](https://en.wikipedia.org/wiki/Circular_buffer) with implementations built on `map` and `ets`.
 
+[![Build Status](https://travis-ci.org/ckampfe/cbuf.svg?branch=master)](https://travis-ci.org/ckampfe/cbuf)
+
 ## Installation
 
 ```elixir
