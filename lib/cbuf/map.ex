@@ -296,6 +296,23 @@ defmodule Cbuf.Map do
   end
 
   @doc """
+  Delete the first instance of a given value from the buffer.
+
+      iex> buf = Cbuf.Map.new(3)
+      iex> buf = buf |> Cbuf.Map.insert("a") |> Cbuf.Map.insert("b") |> Cbuf.Map.insert("c") |> Cbuf.Map.insert("d")
+      iex> Cbuf.Map.delete_value(buf, "b")
+      #Cbuf<["c", "d"]>
+  """
+  @spec delete_value(t, term) :: t
+  def delete_value(buf, val) do
+    new_buf = new(buf.size)
+    list = Enum.to_list(buf)
+    list = :lists.delete(val, list)
+
+    Enum.into(list, new_buf)
+  end
+
+  @doc """
   Convert a circular buffer to a list. The list is ordered by age, oldest to newest.
   This operation takes linear time.
 
