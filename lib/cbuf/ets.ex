@@ -353,13 +353,9 @@ defmodule Cbuf.ETS do
     if val == :undefined do
       false
     else
-      case :ets.match_object(buf.impl, {:_, val}) do
-        [] ->
-          false
-
-        _ ->
-          true
-      end
+      :ets.foldl(fn {_key, ets_val}, acc ->
+        (ets_val == val) || acc
+      end, false, buf.impl)
     end
   end
 

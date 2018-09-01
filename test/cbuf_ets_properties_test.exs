@@ -5,7 +5,7 @@ defmodule CbufETSPropertiesTest do
   property "data in equals data out for ets" do
     check all input_list <- list_of(term()),
               size <- positive_integer(),
-              max_runs: 300,
+              max_runs: 1000,
               max_run_time: 10_000 do
       last_n = input_list |> Enum.reverse() |> Enum.take(size) |> Enum.reverse()
       buf = Enum.into(input_list, Cbuf.ETS.new(size))
@@ -53,7 +53,7 @@ defmodule CbufETSPropertiesTest do
   property "it does the Collectable stuff" do
     check all input_list <- list_of(term()),
               size <- positive_integer(),
-              max_runs: 300,
+              max_runs: 1000,
               max_run_time: 10_000 do
       last_n = input_list |> Enum.reverse() |> Enum.take(size) |> Enum.reverse()
       buf = Enum.into(input_list, Cbuf.ETS.new(size))
@@ -67,7 +67,7 @@ defmodule CbufETSPropertiesTest do
               size <- positive_integer(),
               range_min <- integer(0..(size - 2)),
               range_max <- integer(range_min..(size - 1)),
-              max_runs: 300,
+              max_runs: 1000,
               max_run_time: 10_000 do
       last_n = input_list |> Enum.reverse() |> Enum.take(size) |> Enum.reverse()
       buf = Enum.into(input_list, Cbuf.ETS.new(size))
