@@ -9,7 +9,7 @@ A [circular buffer](https://en.wikipedia.org/wiki/Circular_buffer) with implemen
 ```elixir
 def deps do
   [
-    {:cbuf, "~> 0.6"}
+    {:cbuf, "~> 0.7"}
   ]
 end
 ```
