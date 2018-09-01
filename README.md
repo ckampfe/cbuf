@@ -1,6 +1,6 @@
 # Cbuf
 
-A [circular buffer](https://en.wikipedia.org/wiki/Circular_buffer) with implementations built on `map` and `ets`.
+A [circular buffer](https://en.wikipedia.org/wiki/Circular_buffer) with implementations built on `queue`, `map` and `ets`.
 
 [![Build Status](https://travis-ci.org/ckampfe/cbuf.svg?branch=master)](https://travis-ci.org/ckampfe/cbuf)
 
@@ -19,206 +19,395 @@ See the docs at [https://hexdocs.pm/cbuf](https://hexdocs.pm/cbuf) for usage inf
 ## Benchmarks
 
 ```
-clark$> mix run bench.exs
+$ mix run bench.exs
+Compiling 4 files (.ex)
 Small N: 50
 Medium N: 5000
 Small N: 50000
-Operating System: macOS
-CPU Information: Intel(R) Core(TM) i7-4870HQ CPU @ 2.50GHz
-Number of Available Cores: 8
+Operating System: macOS"
+CPU Information: Intel(R) Core(TM) i7-4578U CPU @ 3.00GHz
+Number of Available Cores: 4
 Available memory: 16 GB
-Elixir 1.6.1
-Erlang 20.2.2
+Elixir 1.7.3
+Erlang 21.0.7
+
 Benchmark suite executing with the following configuration:
 warmup: 2 s
 time: 5 s
-parallel: 4
+memory time: 3 s
+parallel: 1
 inputs: none specified
-Estimated total run time: 7 min
+Estimated total run time: 15 min
 
 
-Benchmarking ets count medium...
-Benchmarking ets insert large...
-Benchmarking map delete large...
-Benchmarking map size large...
-Benchmarking ets delete medium...
-Benchmarking ets member? small...
-Benchmarking ets to_list small...
-Benchmarking ets size medium...
-Benchmarking ets pop medium...
-Benchmarking map empty? small...
-Benchmarking map pop small...
-Benchmarking map count small...
-Benchmarking ets to_list large...
-Benchmarking ets peek medium...
-Benchmarking map insert large...
-Benchmarking map empty? medium...
-Benchmarking map pop large...
-Benchmarking ets new medium...
-Benchmarking ets to_list medium...
-Benchmarking map peek medium...
-Benchmarking map to_list large...
-Benchmarking map delete small...
-Benchmarking ets delete small...
-Benchmarking ets new large...
-Benchmarking ets pop large...
-Benchmarking map count medium...
-Benchmarking map new large...
-Benchmarking ets new small...
-Benchmarking ets member? medium...
-Benchmarking map new small...
-Benchmarking ets size large...
-Benchmarking ets empty? large...
-Benchmarking ets size small...
-Benchmarking map member? medium...
-Benchmarking ets member? large...
-Benchmarking map peek large...
-Benchmarking map count large...
-Benchmarking ets count large...
-Benchmarking ets delete large...
-Benchmarking ets pop small...
-Benchmarking map to_list medium...
-Benchmarking map delete medium...
-Benchmarking ets empty? small...
-Benchmarking ets empty? medium...
-Benchmarking map new medium...
-Benchmarking map pop medium...
-Benchmarking map member? small...
-Benchmarking ets peek large...
-Benchmarking map peek small...
-Benchmarking ets insert medium...
-Benchmarking ets count small...
-Benchmarking map empty? large...
-Benchmarking ets peek small...
-Benchmarking map member? large...
-Benchmarking map to_list small...
-Benchmarking map size medium...
-Benchmarking map insert small...
-Benchmarking ets insert small...
-Benchmarking map size small...
 Benchmarking map insert medium...
+Benchmarking map size small...
+Benchmarking ets insert small...
+Benchmarking map insert small...
+Benchmarking map size medium...
+Benchmarking queue member? medium...
+Benchmarking queue count medium...
+Benchmarking map to_list small...
+Benchmarking queue size large...
+Benchmarking queue to_list large...
+Benchmarking map member? large...
+Benchmarking queue count large...
+Benchmarking ets peek small...
+Benchmarking map empty? large...
+Benchmarking ets count small...
+Benchmarking queue new small...
+Benchmarking queue empty? medium...
+Benchmarking ets insert medium...
+Benchmarking map peek small...
+Benchmarking ets peek large...
+Benchmarking map member? small...
+Benchmarking queue insert small...
+Benchmarking map pop medium...
+Benchmarking map new medium...
+Benchmarking ets empty? medium...
+Benchmarking ets empty? small...
+Benchmarking queue peek small...
+Benchmarking map delete medium...
+Benchmarking map to_list medium...
+Benchmarking queue new medium...
+Benchmarking ets pop small...
+Benchmarking ets delete large...
+Benchmarking ets count large...
+Benchmarking map count large...
+Benchmarking map peek large...
+Benchmarking ets member? large...
+Benchmarking map member? medium...
+Benchmarking queue delete medium...
+Benchmarking ets size small...
+Benchmarking ets empty? large...
+Benchmarking ets size large...
+Benchmarking queue insert large...
+Benchmarking map new small...
+Benchmarking ets member? medium...
+Benchmarking ets new small...
+Benchmarking queue count small...
+Benchmarking map new large...
+Benchmarking map count medium...
+Benchmarking queue insert medium...
+Benchmarking ets pop large...
+Benchmarking queue pop medium...
+Benchmarking ets new large...
+Benchmarking queue size medium...
+Benchmarking queue peek large...
+Benchmarking ets delete small...
+Benchmarking map delete small...
+Benchmarking queue member? small...
+Benchmarking map to_list large...
+Benchmarking map peek medium...
+Benchmarking ets to_list medium...
+Benchmarking ets new medium...
+Benchmarking map pop large...
+Benchmarking map empty? medium...
+Benchmarking map insert large...
+Benchmarking queue new large...
+Benchmarking ets peek medium...
+Benchmarking queue delete small...
+Benchmarking ets to_list large...
+Benchmarking map count small...
+Benchmarking queue size small...
+Benchmarking map pop small...
+Benchmarking queue pop large...
+Benchmarking map empty? small...
+Benchmarking queue empty? large...
+Benchmarking queue member? large...
+Benchmarking queue to_list small...
+Benchmarking ets pop medium...
+Benchmarking ets size medium...
+Benchmarking ets to_list small...
+Benchmarking ets member? small...
+Benchmarking ets delete medium...
+Benchmarking queue to_list medium...
+Benchmarking map size large...
+Benchmarking queue delete large...
+Benchmarking map delete large...
+Benchmarking ets insert large...
+Benchmarking ets count medium...
+Benchmarking queue empty? small...
+Benchmarking queue peek medium...
+Benchmarking queue pop small...
 
-Name                         ips        average  deviation         median         99th %
-map empty? medium        31.22 M      0.0320 μs    ±83.97%      0.0300 μs      0.0590 μs
-map size large           31.05 M      0.0322 μs    ±77.56%      0.0310 μs      0.0580 μs
-ets size medium          29.83 M      0.0335 μs    ±38.91%      0.0320 μs      0.0620 μs
-ets empty? large         29.49 M      0.0339 μs    ±33.61%      0.0320 μs      0.0600 μs
-ets empty? small         28.71 M      0.0348 μs    ±23.05%      0.0320 μs      0.0640 μs
-ets empty? medium        28.56 M      0.0350 μs    ±23.65%      0.0320 μs      0.0680 μs
-ets size large           28.14 M      0.0355 μs    ±37.91%      0.0320 μs      0.0690 μs
-map size medium          27.94 M      0.0358 μs    ±24.73%      0.0330 μs      0.0670 μs
-map empty? large         27.68 M      0.0361 μs    ±24.58%      0.0330 μs      0.0680 μs
-ets size small           27.26 M      0.0367 μs    ±99.89%      0.0340 μs      0.0690 μs
-map size small           26.40 M      0.0379 μs   ±299.37%      0.0320 μs       0.100 μs
-ets count medium         16.55 M      0.0604 μs    ±56.37%      0.0600 μs       0.110 μs
-map count medium         15.35 M      0.0651 μs    ±64.47%      0.0600 μs       0.120 μs
-map count small          15.17 M      0.0659 μs   ±288.40%      0.0600 μs       0.120 μs
-map count large          15.06 M      0.0664 μs   ±105.84%      0.0600 μs       0.130 μs
-ets count small          14.95 M      0.0669 μs    ±39.52%      0.0620 μs       0.130 μs
-ets count large          14.94 M      0.0669 μs    ±47.91%      0.0630 μs       0.130 μs
-map peek large           11.52 M      0.0868 μs    ±51.89%      0.0800 μs       0.180 μs
-map peek medium          11.12 M      0.0899 μs   ±115.14%      0.0820 μs       0.190 μs
-map peek small           10.96 M      0.0913 μs   ±221.72%      0.0800 μs       0.190 μs
-map empty? small          6.06 M       0.165 μs   ±227.60%           0 μs           1 μs
-map delete small          4.18 M        0.24 μs   ±102.60%        0.21 μs        1.89 μs
-map insert small          4.14 M        0.24 μs    ±93.51%        0.21 μs        1.84 μs
-map pop small             3.36 M        0.30 μs    ±79.15%        0.28 μs        0.60 μs
-map delete large          3.36 M        0.30 μs  ±1653.92%        0.21 μs        1.92 μs
-map delete medium         3.30 M        0.30 μs  ±1252.38%        0.25 μs        0.60 μs
-map insert medium         3.14 M        0.32 μs   ±109.24%        0.24 μs        2.19 μs
-map insert large          3.09 M        0.32 μs  ±1350.73%        0.30 μs        0.60 μs
-map pop large             2.34 M        0.43 μs   ±809.80%        0.40 μs        0.81 μs
-map pop medium            2.19 M        0.46 μs  ±1204.54%        0.30 μs        1.10 μs
-ets peek medium           1.47 M        0.68 μs   ±507.39%        0.63 μs        1.20 μs
-ets peek small            1.47 M        0.68 μs   ±554.57%        0.60 μs        1.30 μs
-ets peek large            1.45 M        0.69 μs   ±467.56%        0.64 μs        1.30 μs
-ets member? small         0.24 M        4.24 μs   ±652.64%           4 μs           8 μs
-map member? small        0.169 M        5.94 μs   ±942.22%           5 μs          13 μs
-ets insert small         0.156 M        6.39 μs    ±46.70%        6.40 μs       13.70 μs
-ets insert medium        0.156 M        6.39 μs    ±49.78%        6.30 μs       14.40 μs
-ets delete small         0.142 M        7.03 μs    ±44.53%        7.03 μs       14.50 μs
-ets insert large         0.126 M        7.95 μs   ±279.23%        5.80 μs          32 μs
-ets delete medium        0.121 M        8.25 μs   ±223.99%        5.70 μs          31 μs
-map to_list small        0.119 M        8.40 μs   ±585.01%           7 μs          15 μs
-ets delete large         0.114 M        8.77 μs   ±228.22%        6.37 μs          35 μs
-map new small           0.0904 M       11.06 μs   ±404.22%           8 μs         132 μs
-ets pop medium          0.0567 M       17.64 μs    ±26.31%       17.60 μs       28.60 μs
-ets pop small           0.0548 M       18.27 μs   ±100.24%          17 μs          49 μs
-ets pop large           0.0508 M       19.67 μs    ±93.53%          18 μs          53 μs
-ets to_list small       0.0287 M       34.86 μs    ±29.46%          35 μs          43 μs
-ets new small           0.0272 M       36.76 μs    ±45.14%          36 μs          57 μs
-ets member? medium     0.00361 M      277.09 μs    ±17.09%         268 μs         479 μs
-map member? medium     0.00228 M      437.87 μs    ±11.20%         427 μs      752.55 μs
-map to_list medium     0.00122 M      821.78 μs    ±11.36%         809 μs     1429.76 μs
-map new medium         0.00054 M     1851.17 μs    ±23.16%        1719 μs     3253.09 μs
-ets member? large      0.00034 M     2961.39 μs    ±10.02%        2881 μs     4714.44 μs
-ets new medium         0.00029 M     3476.30 μs    ±12.71%        3591 μs        4102 μs
-ets to_list medium     0.00024 M     4197.38 μs    ±19.38%        3942 μs     7367.34 μs
-map member? large      0.00019 M     5289.42 μs    ±16.55%        4928 μs     8199.65 μs
-map to_list large      0.00007 M    15199.72 μs    ±17.11%       14783 μs    22345.60 μs
-map new large          0.00004 M    25682.00 μs    ±13.82%       25314 μs    35804.93 μs
-ets new large          0.00003 M    36430.22 μs    ±11.77%    36253.50 μs    45945.20 μs
-ets to_list large      0.00002 M    43671.84 μs     ±7.02%       43567 μs    60286.94 μs
+Name                           ips        average  deviation         median         99th %
+queue count large          36.63 M      0.0273 μs    ±25.48%      0.0260 μs      0.0505 μs
+queue empty? large         36.03 M      0.0278 μs   ±105.62%      0.0260 μs      0.0510 μs
+queue empty? medium        36.00 M      0.0278 μs    ±44.66%      0.0260 μs      0.0530 μs
+map empty? small           35.66 M      0.0280 μs    ±24.58%      0.0270 μs      0.0530 μs
+map empty? large           35.37 M      0.0283 μs   ±140.62%      0.0270 μs      0.0570 μs
+ets empty? large           34.61 M      0.0289 μs    ±29.37%      0.0270 μs      0.0590 μs
+map size large             34.46 M      0.0290 μs    ±23.70%      0.0280 μs      0.0540 μs
+ets size medium            34.23 M      0.0292 μs    ±60.39%      0.0280 μs      0.0540 μs
+queue size small           34.12 M      0.0293 μs    ±46.84%      0.0280 μs      0.0550 μs
+map empty? medium          32.82 M      0.0305 μs   ±142.15%      0.0270 μs      0.0710 μs
+ets size large             32.47 M      0.0308 μs    ±33.63%      0.0280 μs      0.0640 μs
+queue empty? small         30.72 M      0.0326 μs   ±137.15%      0.0270 μs      0.0810 μs
+ets empty? medium          30.33 M      0.0330 μs   ±164.37%      0.0270 μs       0.101 μs
+queue count medium         29.79 M      0.0336 μs   ±208.37%      0.0270 μs      0.0930 μs
+queue count small          29.46 M      0.0339 μs   ±206.73%      0.0260 μs       0.117 μs
+queue size large           29.32 M      0.0341 μs   ±209.42%      0.0290 μs      0.0770 μs
+ets empty? small           27.98 M      0.0357 μs   ±275.08%      0.0270 μs       0.124 μs
+ets size small             27.90 M      0.0358 μs   ±206.62%      0.0290 μs      0.0840 μs
+queue delete small         27.87 M      0.0359 μs    ±24.88%      0.0340 μs      0.0660 μs
+queue delete large         27.75 M      0.0360 μs    ±25.91%      0.0340 μs      0.0670 μs
+map size medium            26.56 M      0.0377 μs   ±213.51%      0.0290 μs       0.126 μs
+map size small             23.59 M      0.0424 μs   ±293.96%      0.0280 μs       0.182 μs
+queue delete medium        22.60 M      0.0442 μs   ±229.87%      0.0340 μs       0.139 μs
+queue new large            22.05 M      0.0453 μs   ±741.77%      0.0400 μs       0.110 μs
+queue new small            21.55 M      0.0464 μs   ±705.26%      0.0400 μs       0.130 μs
+map count small            18.42 M      0.0543 μs   ±106.97%      0.0500 μs      0.0990 μs
+queue peek medium          17.97 M      0.0556 μs   ±181.07%      0.0430 μs        0.21 μs
+queue peek large           17.75 M      0.0563 μs    ±91.49%      0.0440 μs       0.105 μs
+ets count small            17.58 M      0.0569 μs    ±20.47%      0.0550 μs       0.100 μs
+queue new medium           17.42 M      0.0574 μs  ±1020.13%      0.0400 μs       0.170 μs
+ets count medium           17.29 M      0.0578 μs    ±26.65%      0.0540 μs       0.107 μs
+queue peek small           16.93 M      0.0591 μs   ±253.04%      0.0440 μs        0.25 μs
+map count large            16.28 M      0.0614 μs   ±136.05%      0.0500 μs        0.24 μs
+queue member? large        16.10 M      0.0621 μs    ±62.13%      0.0590 μs       0.118 μs
+queue member? small        15.72 M      0.0636 μs    ±29.48%      0.0590 μs       0.130 μs
+map count medium           15.19 M      0.0658 μs   ±222.03%      0.0510 μs        0.27 μs
+map peek small             14.69 M      0.0681 μs   ±109.37%      0.0600 μs       0.150 μs
+ets count large            13.87 M      0.0721 μs   ±195.73%      0.0550 μs        0.30 μs
+map peek medium            13.42 M      0.0745 μs    ±58.42%      0.0680 μs       0.167 μs
+queue pop large            13.18 M      0.0758 μs   ±402.77%      0.0700 μs       0.150 μs
+queue member? medium       12.78 M      0.0783 μs   ±205.67%      0.0620 μs        0.29 μs
+queue size medium          11.88 M      0.0841 μs   ±528.56%      0.0660 μs        0.33 μs
+map peek large             11.70 M      0.0854 μs   ±204.43%      0.0620 μs        0.37 μs
+queue pop small            10.77 M      0.0928 μs   ±397.21%      0.0700 μs        0.26 μs
+queue insert medium         7.10 M       0.141 μs   ±356.41%       0.110 μs        0.55 μs
+queue pop medium            5.58 M       0.179 μs   ±514.13%       0.150 μs        0.34 μs
+map delete small            5.38 M       0.186 μs   ±123.45%       0.170 μs        0.43 μs
+ets delete medium           4.88 M        0.20 μs    ±45.59%       0.190 μs        0.47 μs
+queue to_list small         4.77 M        0.21 μs  ±1686.38%        0.20 μs        0.40 μs
+ets delete small            4.69 M        0.21 μs    ±61.64%       0.190 μs        0.50 μs
+ets insert large            4.62 M        0.22 μs    ±47.82%        0.20 μs        0.46 μs
+ets insert medium           4.52 M        0.22 μs   ±125.01%        0.20 μs        0.52 μs
+map insert small            4.35 M        0.23 μs   ±296.94%       0.170 μs        0.68 μs
+map insert large            4.11 M        0.24 μs    ±40.60%        0.23 μs        0.63 μs
+map pop small               4.11 M        0.24 μs    ±36.37%        0.23 μs        0.50 μs
+ets delete large            4.00 M        0.25 μs   ±208.24%       0.190 μs        0.85 μs
+map delete large            3.97 M        0.25 μs    ±41.12%        0.23 μs        0.64 μs
+ets insert small            3.84 M        0.26 μs   ±204.22%        0.20 μs        0.89 μs
+map insert medium           3.21 M        0.31 μs   ±565.96%        0.20 μs        1.10 μs
+map pop large               2.93 M        0.34 μs  ±1451.56%        0.30 μs        0.80 μs
+queue insert small          2.85 M        0.35 μs  ±8990.95%           0 μs           1 μs
+map pop medium              2.83 M        0.35 μs   ±219.67%        0.27 μs        1.20 μs
+queue insert large          2.80 M        0.36 μs  ±8678.14%           0 μs           1 μs
+map delete medium           2.69 M        0.37 μs  ±1712.81%        0.20 μs        1.20 μs
+ets peek small              1.58 M        0.63 μs  ±1379.49%           1 μs           1 μs
+ets peek large              1.54 M        0.65 μs  ±3721.00%           1 μs           1 μs
+ets peek medium             1.50 M        0.67 μs  ±1036.64%           1 μs           1 μs
+ets pop medium              1.08 M        0.92 μs  ±3533.92%           1 μs           2 μs
+ets pop small               0.92 M        1.09 μs  ±3857.43%           1 μs           2 μs
+ets pop large               0.76 M        1.31 μs  ±4378.21%           1 μs           3 μs
+ets member? small           0.28 M        3.52 μs   ±402.66%           3 μs           7 μs
+map member? small          0.187 M        5.35 μs   ±695.57%           4 μs          16 μs
+map to_list small          0.127 M        7.89 μs   ±687.96%           6 μs          20 μs
+map new small              0.104 M        9.61 μs   ±531.81%           7 μs          39 μs
+queue to_list medium      0.0461 M       21.67 μs   ±202.52%          13 μs          96 μs
+ets to_list small         0.0398 M       25.14 μs    ±39.17%          24 μs          48 μs
+ets new small             0.0240 M       41.63 μs   ±179.30%          34 μs         156 μs
+queue to_list large      0.00404 M      247.65 μs    ±87.71%         108 μs         708 μs
+ets member? medium       0.00349 M      286.87 μs   ±159.94%         195 μs     2039.06 μs
+map member? medium       0.00232 M      431.61 μs    ±82.39%         338 μs     2453.11 μs
+map to_list medium       0.00111 M      898.77 μs    ±71.95%         694 μs     3567.06 μs
+map new medium           0.00055 M     1808.78 μs    ±45.66%        1600 μs        5512 μs
+ets to_list medium       0.00033 M     2996.67 μs    ±15.41%        2861 μs     5354.17 μs
+ets new medium           0.00029 M     3453.91 μs    ±15.59%        3324 μs     5801.12 μs
+map member? large        0.00027 M     3716.72 μs    ±12.30%        3531 μs     5552.95 μs
+ets member? large        0.00016 M     6147.96 μs    ±36.04%        5526 μs    13708.14 μs
+map to_list large        0.00007 M    13372.52 μs    ±18.76%       12578 μs       22136 μs
+map new large            0.00004 M    24491.32 μs    ±19.78%       23412 μs    40776.10 μs
+ets to_list large        0.00003 M    36548.49 μs    ±13.48%       35461 μs    59262.10 μs
+ets new large            0.00002 M    55398.77 μs    ±32.20%       52066 μs      192133 μs
 
-Comparison:
-map empty? medium        31.22 M
-map size large           31.05 M - 1.01x slower
-ets size medium          29.83 M - 1.05x slower
-ets empty? large         29.49 M - 1.06x slower
-ets empty? small         28.71 M - 1.09x slower
-ets empty? medium        28.56 M - 1.09x slower
-ets size large           28.14 M - 1.11x slower
-map size medium          27.94 M - 1.12x slower
-map empty? large         27.68 M - 1.13x slower
-ets size small           27.26 M - 1.15x slower
-map size small           26.40 M - 1.18x slower
-ets count medium         16.55 M - 1.89x slower
-map count medium         15.35 M - 2.03x slower
-map count small          15.17 M - 2.06x slower
-map count large          15.06 M - 2.07x slower
-ets count small          14.95 M - 2.09x slower
-ets count large          14.94 M - 2.09x slower
-map peek large           11.52 M - 2.71x slower
-map peek medium          11.12 M - 2.81x slower
-map peek small           10.96 M - 2.85x slower
-map empty? small          6.06 M - 5.15x slower
-map delete small          4.18 M - 7.47x slower
-map insert small          4.14 M - 7.54x slower
-map pop small             3.36 M - 9.29x slower
-map delete large          3.36 M - 9.30x slower
-map delete medium         3.30 M - 9.46x slower
-map insert medium         3.14 M - 9.95x slower
-map insert large          3.09 M - 10.10x slower
-map pop large             2.34 M - 13.34x slower
-map pop medium            2.19 M - 14.26x slower
-ets peek medium           1.47 M - 21.23x slower
-ets peek small            1.47 M - 21.30x slower
-ets peek large            1.45 M - 21.57x slower
-ets member? small         0.24 M - 132.29x slower
-map member? small        0.169 M - 185.29x slower
-ets insert small         0.156 M - 199.57x slower
-ets insert medium        0.156 M - 199.64x slower
-ets delete small         0.142 M - 219.59x slower
-ets insert large         0.126 M - 248.15x slower
-ets delete medium        0.121 M - 257.42x slower
-map to_list small        0.119 M - 262.09x slower
-ets delete large         0.114 M - 273.78x slower
-map new small           0.0904 M - 345.23x slower
-ets pop medium          0.0567 M - 550.65x slower
-ets pop small           0.0548 M - 570.28x slower
-ets pop large           0.0508 M - 614.11x slower
-ets to_list small       0.0287 M - 1088.44x slower
-ets new small           0.0272 M - 1147.63x slower
-ets member? medium     0.00361 M - 8651.04x slower
-map member? medium     0.00228 M - 13670.95x slower
-map to_list medium     0.00122 M - 25657.40x slower
-map new medium         0.00054 M - 57796.44x slower
-ets member? large      0.00034 M - 92459.48x slower
-ets new medium         0.00029 M - 108535.84x slower
-ets to_list medium     0.00024 M - 131049.30x slower
-map member? large      0.00019 M - 165144.57x slower
-map to_list large      0.00007 M - 474560.63x slower
-map new large          0.00004 M - 801834.66x slower
-ets new large          0.00003 M - 1137411.90x slower
-ets to_list large      0.00002 M - 1363507.31x slower
+Comparison: 
+queue count large          36.63 M
+queue empty? large         36.03 M - 1.02x slower
+queue empty? medium        36.00 M - 1.02x slower
+map empty? small           35.66 M - 1.03x slower
+map empty? large           35.37 M - 1.04x slower
+ets empty? large           34.61 M - 1.06x slower
+map size large             34.46 M - 1.06x slower
+ets size medium            34.23 M - 1.07x slower
+queue size small           34.12 M - 1.07x slower
+map empty? medium          32.82 M - 1.12x slower
+ets size large             32.47 M - 1.13x slower
+queue empty? small         30.72 M - 1.19x slower
+ets empty? medium          30.33 M - 1.21x slower
+queue count medium         29.79 M - 1.23x slower
+queue count small          29.46 M - 1.24x slower
+queue size large           29.32 M - 1.25x slower
+ets empty? small           27.98 M - 1.31x slower
+ets size small             27.90 M - 1.31x slower
+queue delete small         27.87 M - 1.31x slower
+queue delete large         27.75 M - 1.32x slower
+map size medium            26.56 M - 1.38x slower
+map size small             23.59 M - 1.55x slower
+queue delete medium        22.60 M - 1.62x slower
+queue new large            22.05 M - 1.66x slower
+queue new small            21.55 M - 1.70x slower
+map count small            18.42 M - 1.99x slower
+queue peek medium          17.97 M - 2.04x slower
+queue peek large           17.75 M - 2.06x slower
+ets count small            17.58 M - 2.08x slower
+queue new medium           17.42 M - 2.10x slower
+ets count medium           17.29 M - 2.12x slower
+queue peek small           16.93 M - 2.16x slower
+map count large            16.28 M - 2.25x slower
+queue member? large        16.10 M - 2.28x slower
+queue member? small        15.72 M - 2.33x slower
+map count medium           15.19 M - 2.41x slower
+map peek small             14.69 M - 2.49x slower
+ets count large            13.87 M - 2.64x slower
+map peek medium            13.42 M - 2.73x slower
+queue pop large            13.18 M - 2.78x slower
+queue member? medium       12.78 M - 2.87x slower
+queue size medium          11.88 M - 3.08x slower
+map peek large             11.70 M - 3.13x slower
+queue pop small            10.77 M - 3.40x slower
+queue insert medium         7.10 M - 5.16x slower
+queue pop medium            5.58 M - 6.57x slower
+map delete small            5.38 M - 6.81x slower
+ets delete medium           4.88 M - 7.51x slower
+queue to_list small         4.77 M - 7.68x slower
+ets delete small            4.69 M - 7.82x slower
+ets insert large            4.62 M - 7.94x slower
+ets insert medium           4.52 M - 8.10x slower
+map insert small            4.35 M - 8.43x slower
+map insert large            4.11 M - 8.91x slower
+map pop small               4.11 M - 8.92x slower
+ets delete large            4.00 M - 9.16x slower
+map delete large            3.97 M - 9.24x slower
+ets insert small            3.84 M - 9.54x slower
+map insert medium           3.21 M - 11.42x slower
+map pop large               2.93 M - 12.49x slower
+queue insert small          2.85 M - 12.85x slower
+map pop medium              2.83 M - 12.92x slower
+queue insert large          2.80 M - 13.09x slower
+map delete medium           2.69 M - 13.64x slower
+ets peek small              1.58 M - 23.23x slower
+ets peek large              1.54 M - 23.75x slower
+ets peek medium             1.50 M - 24.41x slower
+ets pop medium              1.08 M - 33.83x slower
+ets pop small               0.92 M - 39.99x slower
+ets pop large               0.76 M - 48.11x slower
+ets member? small           0.28 M - 128.91x slower
+map member? small          0.187 M - 195.92x slower
+map to_list small          0.127 M - 289.21x slower
+map new small              0.104 M - 352.05x slower
+queue to_list medium      0.0461 M - 794.03x slower
+ets to_list small         0.0398 M - 921.15x slower
+ets new small             0.0240 M - 1525.20x slower
+queue to_list large      0.00404 M - 9072.67x slower
+ets member? medium       0.00349 M - 10509.47x slower
+map member? medium       0.00232 M - 15811.88x slower
+map to_list medium       0.00111 M - 32926.41x slower
+map new medium           0.00055 M - 66264.49x slower
+ets to_list medium       0.00033 M - 109782.81x slower
+ets new medium           0.00029 M - 126533.86x slower
+map member? large        0.00027 M - 136162.14x slower
+ets member? large        0.00016 M - 225230.34x slower
+map to_list large        0.00007 M - 489902.18x slower
+map new large            0.00004 M - 897239.20x slower
+ets to_list large        0.00003 M - 1338953.51x slower
+ets new large            0.00002 M - 2029533.33x slower
+
+Memory usage statistics:
+
+Name                    Memory usage
+queue count large              144 B
+queue empty? large             144 B - 1.00x memory usage
+queue empty? medium            144 B - 1.00x memory usage
+map empty? small              1672 B - 11.61x memory usage
+map empty? large           1475592 B - 10247.17x memory usage
+ets empty? large               176 B - 1.22x memory usage
+map size large             1475592 B - 10247.17x memory usage
+ets size medium                176 B - 1.22x memory usage
+queue size small               144 B - 1.00x memory usage
+map empty? medium           149688 B - 1039.50x memory usage
+ets size large                 176 B - 1.22x memory usage
+queue empty? small             144 B - 1.00x memory usage
+ets empty? medium              176 B - 1.22x memory usage
+queue count medium             144 B - 1.00x memory usage
+queue count small              144 B - 1.00x memory usage
+queue size large               144 B - 1.00x memory usage
+ets empty? small               176 B - 1.22x memory usage
+ets size small                 176 B - 1.22x memory usage
+queue delete small             144 B - 1.00x memory usage
+queue delete large             144 B - 1.00x memory usage
+map size medium             149688 B - 1039.50x memory usage
+map size small                1672 B - 11.61x memory usage
+queue delete medium            144 B - 1.00x memory usage
+queue new large                136 B - 0.94x memory usage
+queue new small                136 B - 0.94x memory usage
+map count small               1672 B - 11.61x memory usage
+queue peek medium              144 B - 1.00x memory usage
+queue peek large               144 B - 1.00x memory usage
+ets count small                176 B - 1.22x memory usage
+queue new medium               136 B - 0.94x memory usage
+ets count medium               176 B - 1.22x memory usage
+queue peek small               144 B - 1.00x memory usage
+map count large            1475592 B - 10247.17x memory usage
+queue member? large            144 B - 1.00x memory usage
+queue member? small            144 B - 1.00x memory usage
+map count medium            149688 B - 1039.50x memory usage
+map peek small                1672 B - 11.61x memory usage
+ets count large                176 B - 1.22x memory usage
+map peek medium             149688 B - 1039.50x memory usage
+queue pop large                168 B - 1.17x memory usage
+queue member? medium           144 B - 1.00x memory usage
+queue size medium              144 B - 1.00x memory usage
+map peek large             1475592 B - 10247.17x memory usage
+queue pop small                168 B - 1.17x memory usage
+queue insert medium            248 B - 1.72x memory usage
+queue pop medium               168 B - 1.17x memory usage
+map delete small              1944 B - 13.50x memory usage
+ets delete medium              272 B - 1.89x memory usage
+queue to_list small           1776 B - 12.33x memory usage
+ets delete small               272 B - 1.89x memory usage
+ets insert large               272 B - 1.89x memory usage
+ets insert medium              272 B - 1.89x memory usage
+map insert small              1944 B - 13.50x memory usage
+map insert large           1476168 B - 10251.17x memory usage
+map pop small                 1968 B - 13.67x memory usage
+ets delete large               272 B - 1.89x memory usage
+map delete large           1476168 B - 10251.17x memory usage
+ets insert small               272 B - 1.89x memory usage
+map insert medium           150192 B - 1043.00x memory usage
+map pop large              1476192 B - 10251.33x memory usage
+queue insert small             248 B - 1.72x memory usage
+map pop medium              150216 B - 1043.17x memory usage
+queue insert large             248 B - 1.72x memory usage
+map delete medium           150192 B - 1043.00x memory usage
+ets peek small                 256 B - 1.78x memory usage
+ets peek large                 232 B - 1.61x memory usage
+ets peek medium                256 B - 1.78x memory usage
+ets pop medium                 352 B - 2.44x memory usage
+ets pop small                  352 B - 2.44x memory usage
+ets pop large                  352 B - 2.44x memory usage
+ets member? small              240 B - 1.67x memory usage
+map member? small             4528 B - 31.44x memory usage
+map to_list small             6872 B - 47.72x memory usage
+map new small                12904 B - 89.61x memory usage
+queue to_list medium         87568 B - 608.11x memory usage
+ets to_list small             7520 B - 52.22x memory usage
+ets new small                 1528 B - 10.61x memory usage
+queue to_list large         972192 B - 6751.33x memory usage
+ets member? medium             488 B - 3.39x memory usage
+map member? medium          270544 B - 1878.78x memory usage
+map to_list medium          634776 B - 4408.17x memory usage
+map new medium             1832320 B - 12724.44x memory usage
+ets to_list medium          723960 B - 5027.50x memory usage
+ets new medium              120328 B - 835.61x memory usage
+map member? large          2676448 B - 18586.44x memory usage
+ets member? large             2952 B - 20.50x memory usage
+map to_list large          6002784 B - 41686.00x memory usage
+map new large             23990664 B - 166601.83x memory usage
+ets to_list large          7342208 B - 50987.56x memory usage
+ets new large              1200328 B - 8335.61x memory usage
+
+**All measurements for memory usage were the same**
 ```

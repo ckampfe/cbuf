@@ -1,4 +1,100 @@
 defmodule Cbuf.Queue do
+  @moduledoc """
+  `Cbuf.Queue` implements the `Cbuf` behaviour with Erlang's built-in `queue` as its implementation.
+
+  For examples of typical use, see the documentation for `new/1`, `insert/2`, `peek/1`, and `delete/1`.
+
+  Operations that must interact with the actual data of the buffer
+  (`new/1`, `insert/2`, `peek/1`, `pop/1`, `delete/1`, `to_list/1`, `member?/2`),
+  perform as well as `Queue` does. This is good, as `Queue` is fast.
+
+  Queues, like the other normal Elixir/Erlang datastructures, typically exist in process memory. For example,
+  it is recommended to use this module behind a GenServer in order to share its usage across the system.
+  Using `Cbuf.Queue` in this way means that updates to the buffer will be at the mercy of the process' garbage collection.
+  For large data sets with a lot of process GC, [your application may benefit from a different approach](https://elixirforum.com/t/why-use-ets-when-not-to-use-it/4326/8).
+  For this reason, there is also `Cbuf.ETS` that is drop-in API compatible.
+  I recommend defaulting to using `Cbuf.Queue` with a GenServer and benchmarking your application.
+
+  An example partially-complete `GenServer`  might look something like the following:
+
+  ```
+  defmodule EventTracker do
+    use GenServer
+    alias Cbuf.Queue, as: Cbuf
+
+    def start_link(opts) do
+      GenServer.start_link(__MODULE__, opts, name: __MODULE__)
+    end
+
+    def init(_args) do
+      {:ok, nil}
+    end
+
+    ###########
+    ### API ###
+    ###########
+
+    def new(n) do
+      GenServer.call(__MODULE__, {:new, n})
+    end
+
+    def insert(val) do
+      GenServer.call(__MODULE__, {:insert, val})
+    end
+
+    def insert_async(val) do
+      GenServer.cast(__MODULE__, {:insert, val})
+    end
+
+    def peek do
+      GenServer.call(__MODULE__, :peek)
+    end
+
+    def pop do
+      GenServer.call(__MODULE__, :pop)
+    end
+
+    #################
+    ### CALLBACKS ###
+    #################
+
+    ## handle_call
+
+    def handle_call({:new, n}, _from, _state) do
+      buf = Cbuf.new(n)
+
+      {:reply, :ok, buf}
+    end
+
+    def handle_call({:insert, val}, _from, buf) do
+      new_buf = Cbuf.insert(buf, val)
+
+      {:reply, :ok, new_buf}
+    end
+
+    def handle_call(:peek, _from, buf) do
+      val = Cbuf.peek(buf)
+
+      {:reply, val, buf}
+    end
+
+    def handle_call(:pop, _from, buf) do
+      {val, new_buf} = Cbuf.pop(buf)
+
+      {:reply, val, new_buf}
+    end
+
+    ## handle_cast
+
+    def handle_cast({:insert, val}, buf) do
+      new_buf = Cbuf.insert(buf, val)
+
+      {:noreply, new_buf}
+    end
+  end
+  ```
+  """
+
   @behaviour Cbuf
 
   @opaque t :: %__MODULE__{

@@ -6,8 +6,9 @@ defmodule Cbuf do
   Examples might include applications where you want to process the most recent events without having to process older ones,
   or where you wish to compute statistics over only the newest events in a stream.
 
-  This library provides two implementations of `Cbuf`: `Cbuf.Map` and `Cbuf.ETS`.
-  I recommend defaulting to `Cbuf.Map` unless you specifically know that `Cbuf.ETS` will better serve your use case.
+  This library provides three implementations of `Cbuf`: `Cbuf.Queue`, `Cbuf.Map`, and `Cbuf.ETS`.
+  I recommend defaulting to `Cbuf.Queue` unless you specifically know that `Cbuf.Map` or `Cbuf.ETS` will
+  better serve your use case.
 
   This version of the structure operates on a First In, First Out basis, where the "first" value out of the structure is the oldest,
   and every value after that will be newer, with the last item in the buffer being the newest.
