@@ -14,7 +14,7 @@ defmodule Cbuf do
 
   """
 
-  @opaque t :: Cbuf.Map.t | Cbuf.ETS.t
+  @opaque t :: Cbuf.Map.t() | Cbuf.ETS.t() | Cbuf.Queue.t()
 
   @callback new(pos_integer) :: t
   @callback size(t) :: non_neg_integer

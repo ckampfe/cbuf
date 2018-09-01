@@ -14,6 +14,10 @@ ets_small = Cbuf.ETS.new(small)
 ets_medium = Cbuf.ETS.new(medium)
 ets_large = Cbuf.ETS.new(large)
 
+queue_small = Cbuf.Queue.new(small)
+queue_medium = Cbuf.Queue.new(medium)
+queue_large = Cbuf.Queue.new(large)
+
 str = "ok"
 
 map_filled_small = Enum.reduce(1..small, map_small, fn(val, buf) -> Cbuf.Map.insert(buf, val) end)
@@ -23,6 +27,10 @@ map_filled_large = Enum.reduce(1..large, map_large, fn(val, buf) -> Cbuf.Map.ins
 ets_filled_small = Enum.reduce(1..small, ets_small, fn(val, buf) -> Cbuf.ETS.insert(buf, val) end)
 ets_filled_medium = Enum.reduce(1..medium, ets_medium, fn(val, buf) -> Cbuf.ETS.insert(buf, val) end)
 ets_filled_large = Enum.reduce(1..large, ets_large, fn(val, buf) -> Cbuf.ETS.insert(buf, val) end)
+
+queue_filled_small = Enum.reduce(1..small, queue_small, fn(val, buf) -> Cbuf.Queue.insert(buf, val) end)
+queue_filled_medium = Enum.reduce(1..medium, queue_medium, fn(val, buf) -> Cbuf.Queue.insert(buf, val) end)
+queue_filled_large = Enum.reduce(1..large, queue_large, fn(val, buf) -> Cbuf.Queue.insert(buf, val) end)
 
 benchmarks = %{
   "map insert small" => fn -> Cbuf.Map.insert(map_small, str) end,
@@ -104,9 +112,50 @@ benchmarks = %{
   "ets member? small" => fn -> Cbuf.ETS.member?(ets_small, 3) end,
   "ets member? medium" => fn -> Cbuf.ETS.member?(ets_medium, 30) end,
   "ets member? large" => fn -> Cbuf.ETS.member?(ets_large, 300) end,
+
+  "queue insert small" => fn -> Cbuf.Queue.insert(queue_small, str) end,
+  "queue insert medium" => fn -> Cbuf.Queue.insert(queue_medium, str) end,
+  "queue insert large" => fn -> Cbuf.Queue.insert(queue_large, str) end,
+
+  "queue to_list small" => fn -> Cbuf.Queue.to_list(queue_filled_small) end,
+  "queue to_list medium" => fn -> Cbuf.Queue.to_list(queue_filled_medium) end,
+  "queue to_list large" => fn -> Cbuf.Queue.to_list(queue_filled_large) end,
+
+  "queue new small" => fn -> Cbuf.Queue.new(small) end,
+  "queue new medium" => fn -> Cbuf.Queue.new(medium) end,
+  "queue new large" => fn -> Cbuf.Queue.new(large) end,
+
+  "queue peek small" => fn -> Cbuf.Queue.peek(queue_small) end,
+  "queue peek medium" => fn -> Cbuf.Queue.peek(queue_medium) end,
+  "queue peek large" => fn -> Cbuf.Queue.peek(queue_large) end,
+
+  "queue size small" => fn -> Cbuf.Queue.size(queue_small) end,
+  "queue size medium" => fn -> Cbuf.Queue.size(queue_medium) end,
+  "queue size large" => fn -> Cbuf.Queue.size(queue_large) end,
+
+  "queue count small" => fn -> Cbuf.Queue.count(queue_small) end,
+  "queue count medium" => fn -> Cbuf.Queue.count(queue_medium) end,
+  "queue count large" => fn -> Cbuf.Queue.count(queue_large) end,
+
+  "queue delete small" => fn -> Cbuf.Queue.delete(queue_small) end,
+  "queue delete medium" => fn -> Cbuf.Queue.delete(queue_medium) end,
+  "queue delete large" => fn -> Cbuf.Queue.delete(queue_large) end,
+
+  "queue pop small" => fn -> Cbuf.Queue.pop(queue_small) end,
+  "queue pop medium" => fn -> Cbuf.Queue.pop(queue_medium) end,
+  "queue pop large" => fn -> Cbuf.Queue.pop(queue_large) end,
+
+  "queue empty? small" => fn -> Cbuf.Queue.empty?(queue_small) end,
+  "queue empty? medium" => fn -> Cbuf.Queue.empty?(queue_medium) end,
+  "queue empty? large" => fn -> Cbuf.Queue.empty?(queue_large) end,
+
+  "queue member? small" => fn -> Cbuf.Queue.member?(queue_small, 3) end,
+  "queue member? medium" => fn -> Cbuf.Queue.member?(queue_medium, 300) end,
+  "queue member? large" => fn -> Cbuf.Queue.member?(queue_large, 30000) end,
 }
 Benchee.run(
   benchmarks,
-  parallel: 4,
-  print: [fast_warning: false]
+  print: [fast_warning: false],
+  time: 5,
+  memory_time: 3
 )
