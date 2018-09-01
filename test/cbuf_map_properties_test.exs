@@ -23,7 +23,8 @@ defmodule CbufMapPropertiesTest do
       refute Cbuf.Map.member?(buf, :undefined)
 
       if Cbuf.Map.count(buf) > 0 do
-        assert Cbuf.Map.delete(buf) |> Cbuf.Map.count() == Cbuf.Map.count(buf) - 1
+        assert Cbuf.Map.delete(buf) |> Cbuf.Map.count() ==
+                 Cbuf.Map.count(buf) - 1
       else
         assert Cbuf.Map.delete(buf) |> Cbuf.Map.count() == 0
       end
@@ -74,7 +75,8 @@ defmodule CbufMapPropertiesTest do
 
       assert Enum.reduce(buf, [], fn val, acc -> acc ++ [val] end) == last_n
 
-      assert Enum.slice(buf, range_min..range_max) == Enum.slice(last_n, range_min..range_max)
+      assert Enum.slice(buf, range_min..range_max) ==
+               Enum.slice(last_n, range_min..range_max)
     end
   end
 end

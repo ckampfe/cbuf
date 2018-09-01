@@ -26,12 +26,12 @@ defmodule Cbuf.ETS do
   @behaviour Cbuf
 
   @opaque t :: %__MODULE__{
-    impl: :ets.tab(),
-    size: non_neg_integer,
-    start: non_neg_integer,
-    current: non_neg_integer,
-    empty: boolean
-  }
+            impl: :ets.tab(),
+            size: non_neg_integer,
+            start: non_neg_integer,
+            current: non_neg_integer,
+            empty: boolean
+          }
 
   defstruct impl: nil, size: 0, start: 0, current: 0, empty: true
 
@@ -402,7 +402,10 @@ defmodule Cbuf.ETS do
   defimpl Enumerable, for: Cbuf.ETS do
     def count(buf), do: {:ok, Cbuf.ETS.count(buf)}
     def member?(buf, val), do: {:ok, Cbuf.ETS.member?(buf, val)}
-    def reduce(buf, acc, fun), do: Enumerable.List.reduce(Cbuf.ETS.to_list(buf), acc, fun)
+
+    def reduce(buf, acc, fun),
+      do: Enumerable.List.reduce(Cbuf.ETS.to_list(buf), acc, fun)
+
     def slice(_buf), do: {:error, __MODULE__}
   end
 

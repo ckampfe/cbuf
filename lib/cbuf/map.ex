@@ -98,12 +98,12 @@ defmodule Cbuf.Map do
   @behaviour Cbuf
 
   @opaque t :: %__MODULE__{
-    impl: map,
-    size: non_neg_integer,
-    start: non_neg_integer,
-    current: non_neg_integer,
-    empty: boolean
-  }
+            impl: map,
+            size: non_neg_integer,
+            start: non_neg_integer,
+            current: non_neg_integer,
+            empty: boolean
+          }
 
   defstruct impl: %{}, size: 0, start: 0, current: 0, empty: true
 
@@ -116,7 +116,10 @@ defmodule Cbuf.Map do
   @spec new(pos_integer) :: t
   def new(size) when size > 0 do
     %__MODULE__{
-      impl: Enum.reduce(0..(size - 1), %{}, fn i, impl -> Map.put(impl, i, :undefined) end),
+      impl:
+        Enum.reduce(0..(size - 1), %{}, fn i, impl ->
+          Map.put(impl, i, :undefined)
+        end),
       size: size,
       start: 0,
       current: 0,
@@ -421,7 +424,10 @@ defmodule Cbuf.Map do
   defimpl Enumerable, for: Cbuf.Map do
     def count(buf), do: {:ok, Cbuf.Map.count(buf)}
     def member?(buf, val), do: {:ok, Cbuf.Map.member?(buf, val)}
-    def reduce(buf, acc, fun), do: Enumerable.List.reduce(Cbuf.Map.to_list(buf), acc, fun)
+
+    def reduce(buf, acc, fun),
+      do: Enumerable.List.reduce(Cbuf.Map.to_list(buf), acc, fun)
+
     def slice(_buf), do: {:error, __MODULE__}
   end
 

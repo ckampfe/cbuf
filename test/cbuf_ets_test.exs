@@ -37,7 +37,8 @@ defmodule CbufETSTest do
         |> Cbuf.ETS.insert(2)
         |> Cbuf.ETS.insert(3)
 
-      assert Enum.into([1, 2, 3], Cbuf.ETS.new(5)) |> Cbuf.ETS.to_list() == Cbuf.ETS.to_list(buf)
+      assert Enum.into([1, 2, 3], Cbuf.ETS.new(5)) |> Cbuf.ETS.to_list() ==
+               Cbuf.ETS.to_list(buf)
     end
   end
 end

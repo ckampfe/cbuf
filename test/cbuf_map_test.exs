@@ -37,7 +37,8 @@ defmodule CbufMapTest do
         |> Cbuf.Map.insert(2)
         |> Cbuf.Map.insert(3)
 
-      assert Enum.into([1, 2, 3], Cbuf.Map.new(5)) |> Cbuf.Map.to_list() == Cbuf.Map.to_list(buf)
+      assert Enum.into([1, 2, 3], Cbuf.Map.new(5)) |> Cbuf.Map.to_list() ==
+               Cbuf.Map.to_list(buf)
     end
   end
 end

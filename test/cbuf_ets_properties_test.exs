@@ -22,7 +22,8 @@ defmodule CbufETSPropertiesTest do
       refute Cbuf.ETS.member?(buf, :undefined)
 
       if Cbuf.ETS.count(buf) > 0 do
-        assert Cbuf.ETS.delete(buf) |> Cbuf.ETS.count() == Cbuf.ETS.count(buf) - 1
+        assert Cbuf.ETS.delete(buf) |> Cbuf.ETS.count() ==
+                 Cbuf.ETS.count(buf) - 1
       else
         assert Cbuf.ETS.delete(buf) |> Cbuf.ETS.count() == 0
       end
@@ -79,7 +80,8 @@ defmodule CbufETSPropertiesTest do
 
       assert Enum.reduce(buf, [], fn val, acc -> acc ++ [val] end) == last_n
 
-      assert Enum.slice(buf, range_min..range_max) == Enum.slice(last_n, range_min..range_max)
+      assert Enum.slice(buf, range_min..range_max) ==
+               Enum.slice(last_n, range_min..range_max)
     end
   end
 end
