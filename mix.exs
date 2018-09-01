@@ -4,7 +4,7 @@ defmodule Cbuf.MixProject do
   def project do
     [
       app: :cbuf,
-      version: "0.7.0",
+      version: "0.7.1",
       elixir: "~> 1.5",
       package: package(),
       description: "A circular buffer backed by a queue, map, or ETS",

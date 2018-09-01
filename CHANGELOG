@@ -1,3 +1,8 @@
+# 0.7.1
+
+- fix weird ETS bug affecting `member?` calls
+- up number of max generated tests per property from 300 to 1000
+
 # 0.7.0
 
 - add implementation based on Erlang's queue
