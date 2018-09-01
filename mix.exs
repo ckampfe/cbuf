@@ -4,10 +4,10 @@ defmodule Cbuf.MixProject do
   def project do
     [
       app: :cbuf,
-      version: "0.6.0",
+      version: "0.7.0",
       elixir: "~> 1.5",
       package: package(),
-      description: "A circular buffer backed by a map or ETS",
+      description: "A circular buffer backed by a queue, map, or ETS",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       dialyzer: [

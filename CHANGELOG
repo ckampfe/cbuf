@@ -1,3 +1,12 @@
+# 0.7.0
+
+- add implementation based on Erlang's queue
+- bump test and bench dependencies
+- tweak benchmarks to run with parallelism: 1, and report memory usage
+- add Elixir 1.7.3 and OTP 21.0 build targets
+- update 1.6 build to 1.6.6
+- do not test Elixir 1.5 with OTP 21.0
+
 # 0.6.0
 
 - relax Elixir requirement to 1.5 instead of 1.6
